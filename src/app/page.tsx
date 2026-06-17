@@ -24,7 +24,7 @@ const testimonials = [
 export default function HomePage() {
   return (<>
     <section className="relative overflow-hidden bg-gradient-to-br from-indigo-900 via-indigo-800 to-cyan-700 text-white tech-grid">
-      <div className="absolute inset-0 bg-[url('/images/hero/hero-bg.svg')] bg-cover bg-center opacity-15"/>
+      <div className="absolute inset-0 bg-[url('/images/hero/hero-bg.jpg')] bg-cover bg-center opacity-15"/>
       <div className="relative mx-auto max-w-7xl px-4 py-20 sm:py-28 lg:py-36 sm:px-6 lg:px-8">
         <div className="max-w-2xl animate-fade-in">
           <Badge className="mb-4 bg-cyan-500/20 text-cyan-200 border-cyan-500/30 text-sm px-4 py-1">Trusted Tech Partner Since 2016</Badge>

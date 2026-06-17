@@ -24,7 +24,7 @@ export function Navbar() {
     <header className="sticky top-0 z-50 w-full border-b border-indigo-100 dark:border-slate-800 bg-white/90 dark:bg-slate-950/90 backdrop-blur-md">
       <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-3 sm:px-6 lg:px-8">
         <Link href="/" className="flex items-center gap-2 shrink-0">
-          <img src="/images/logo.svg" alt="TechServe Pro" className="h-9 w-9" />
+          <img src="/images/logo.jpg" alt="TechServe Pro" className="h-9 w-9" />
           <span className="text-xl font-bold text-indigo-700 dark:text-indigo-400">TechServe<span className="text-cyan-500">Pro</span></span>
         </Link>
         <nav className="hidden lg:flex items-center gap-1">

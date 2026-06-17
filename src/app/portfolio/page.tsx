@@ -3,12 +3,12 @@ import type { Metadata } from "next";
 export const metadata: Metadata = { title: "Portfolio & Case Studies" };
 
 const projects = [
-  {title:"River Coffee — Website Redesign",cat:"web",desc:"Custom Next.js site with online ordering. SEO traffic up 65%.",img:"/images/portfolio/work-1.svg"},
-  {title:"Downtown Dental — Social Media",cat:"social",desc:"Instagram growth from 200 to 5,200 followers in 6 months.",img:"/images/portfolio/work-2.svg"},
-  {title:"GreenLeaf Landscaping — SEO",cat:"web",desc:"Ranked #1 for 'landscaping [city]'. Organic leads up 3x.",img:"/images/portfolio/work-3.svg"},
-  {title:"The Residences — Smart Home",cat:"smarthome",desc:"Full-home automation: 75 devices across 12 units.",img:"/images/portfolio/work-4.svg"},
-  {title:"Oak & Iron — E-Commerce",cat:"web",desc:"Custom Shopify store. $50K in first-month sales.",img:"/images/portfolio/work-5.svg"},
-  {title:"Metro Medical — IT Infrastructure",cat:"it",desc:"Migrated 5 locations to cloud. 99.9% uptime achieved.",img:"/images/portfolio/work-6.svg"},
+  {title:"River Coffee — Website Redesign",cat:"web",desc:"Custom Next.js site with online ordering. SEO traffic up 65%.",img:"/images/portfolio/work-1.jpg"},
+  {title:"Downtown Dental — Social Media",cat:"social",desc:"Instagram growth from 200 to 5,200 followers in 6 months.",img:"/images/portfolio/work-2.jpg"},
+  {title:"GreenLeaf Landscaping — SEO",cat:"web",desc:"Ranked #1 for 'landscaping [city]'. Organic leads up 3x.",img:"/images/portfolio/work-3.jpg"},
+  {title:"The Residences — Smart Home",cat:"smarthome",desc:"Full-home automation: 75 devices across 12 units.",img:"/images/portfolio/work-4.jpg"},
+  {title:"Oak & Iron — E-Commerce",cat:"web",desc:"Custom Shopify store. $50K in first-month sales.",img:"/images/portfolio/work-5.jpg"},
+  {title:"Metro Medical — IT Infrastructure",cat:"it",desc:"Migrated 5 locations to cloud. 99.9% uptime achieved.",img:"/images/portfolio/work-6.jpg"},
 ];
 
 const cats = ["all","web","social","smarthome","it"];
