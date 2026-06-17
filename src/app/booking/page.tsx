@@ -1,0 +1,56 @@
+'use client';
+import { useState } from "react";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import * as z from "zod";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faCalendarCheck, faArrowRight, faArrowLeft, faCheck, faScrewdriverWrench, faHouseLaptop, faServer, faGlobe } from "@fortawesome/free-solid-svg-icons";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
+
+const steps = ["Service","Details","Schedule","Contact","Review"];
+const serviceTypes = [
+  { id: "computer-phone-repair", icon: faScrewdriverWrench, label: "Computer & Phone Repair", fields: "device" },
+  { id: "smart-home-installation", icon: faHouseLaptop, label: "Smart Home Installation", fields: "smarthome" },
+  { id: "it-support", icon: faServer, label: "IT Support", fields: "business" },
+  { id: "website-social-media", icon: faGlobe, label: "Website & Social Media", fields: "web" },
+];
+const deviceTypes = ["Laptop","Desktop","Phone","Tablet","Other"];
+const urgencyLevels = ["Routine","Urgent","Emergency"];
+const timeSlots = ["8AM","9AM","10AM","11AM","12PM","1PM","2PM","3PM","4PM","5PM"];
+
+const schema = z.object({service:z.string().min(1),deviceType:z.string().optional(),brand:z.string().optional(),issue:z.string().optional(),propertyType:z.string().optional(),deviceCount:z.string().optional(),businessName:z.string().optional(),employees:z.string().optional(),industry:z.string().optional(),goals:z.string().optional(),urgency:z.string().optional(),remoteOnsite:z.string().optional(),preferredDate:z.string().optional(),preferredTime:z.string().optional(),address:z.string().min(1),name:z.string().min(2),email:z.string().email(),phone:z.string().min(10)});
+type FormData = z.infer<typeof schema>;
+
+export default function BookingPage() {
+  const [step,setStep]=useState(0);const[submitted,setSubmitted]=useState(false);
+  const {register,handleSubmit,watch,setValue,formState:{errors}}=useForm<FormData>({resolver:zodResolver(schema),defaultValues:{service:"",remoteOnsite:"on-site"}});
+  const svc=watch("service");const sType=serviceTypes.find(s=>s.id===svc);
+  const onSubmit=async(data:FormData)=>{await fetch("/api/booking",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(data)});setSubmitted(true);};
+  if(submitted)return(<section className="py-20"><div className="mx-auto max-w-lg px-4 text-center"><div className="w-20 h-20 rounded-full bg-indigo-100 dark:bg-indigo-950 text-indigo-600 dark:text-indigo-400 flex items-center justify-center mx-auto mb-6"><FontAwesomeIcon icon={faCheck} className="size-10"/></div><h1 className="text-3xl font-bold text-slate-900 dark:text-white mb-3">Booking Confirmed!</h1><p className="text-slate-500 dark:text-slate-400 mb-6">We&apos;ll confirm your appointment within 1 hour.</p><a href="/"><Button className="bg-indigo-700 dark:bg-indigo-600">Back Home</Button></a></div></section>);
+
+  return (<>
+    <section className="bg-gradient-to-r from-indigo-800 to-cyan-600 text-white py-12"><div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 text-center"><h1 className="text-3xl font-extrabold mb-2">Book a Tech</h1><p className="text-indigo-200">Tell us what you need and we&apos;ll send the right technician.</p></div></section>
+    <section className="py-10 bg-slate-50 dark:bg-slate-950"><div className="mx-auto max-w-3xl px-4">
+      <div className="flex justify-between mb-8">{steps.map((s,i)=>(<div key={s} className={`flex flex-col items-center gap-1 ${i<=step?'text-indigo-600 dark:text-cyan-400':'text-slate-300 dark:text-slate-600'}`}><div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold ${i<step?'bg-indigo-600 text-white':i===step?'bg-indigo-600 text-white':'bg-slate-200 dark:bg-slate-700'}`}>{i<step?'✓':i+1}</div><span className="text-xs hidden sm:block">{s}</span></div>))}</div>
+      <Card className="glass border-0 dark:bg-slate-900/75"><CardContent className="p-6 sm:p-8">
+        <form onSubmit={handleSubmit(onSubmit)}>
+          {step===0&&(<div className="animate-fade-in"><h2 className="text-xl font-bold text-slate-900 dark:text-white mb-4">What do you need help with?</h2><div className="grid gap-3 sm:grid-cols-2">{serviceTypes.map(st=>(<button key={st.id} type="button" onClick={()=>{setValue("service",st.id);setStep(1);}} className={`p-4 rounded-xl border-2 text-left transition-all ${svc===st.id?'border-indigo-500 bg-indigo-50 dark:bg-indigo-950 dark:border-cyan-500':'border-slate-200 dark:border-slate-700 hover:border-indigo-300 dark:hover:border-cyan-700'}`}><FontAwesomeIcon icon={st.icon} className="size-5 text-indigo-600 dark:text-cyan-400 mb-2"/><div className="font-semibold text-slate-800 dark:text-slate-200">{st.label}</div></button>))}</div></div>)}
+          {step===1&&(<div className="animate-fade-in"><h2 className="text-xl font-bold text-slate-900 dark:text-white mb-4">Tell us more</h2>
+            {svc==="computer-phone-repair"&&<div className="space-y-3"><Label>Device Type</Label><select {...register("deviceType")} className="w-full rounded-lg border border-slate-200 dark:border-slate-700 p-2 text-sm bg-white dark:bg-slate-800 dark:text-slate-200"><option value="">Select...</option>{deviceTypes.map(t=><option key={t} value={t}>{t}</option>)}</select><Label>Brand/Model</Label><Input {...register("brand")} placeholder="e.g., iPhone 15, Dell XPS"/><Label>Issue Description</Label><Textarea {...register("issue")} placeholder="Screen cracked, won't turn on, slow, virus..." rows={2}/><Label>Urgency</Label><select {...register("urgency")} className="w-full rounded-lg border border-slate-200 dark:border-slate-700 p-2 text-sm bg-white dark:bg-slate-800 dark:text-slate-200">{urgencyLevels.map(u=><option key={u} value={u}>{u}</option>)}</select></div>}
+            {svc==="smart-home-installation"&&<div className="space-y-3"><Label>Property Type</Label><Input {...register("propertyType")} placeholder="House, apartment, office..."/><Label>Number of Devices</Label><Input {...register("deviceCount")} placeholder="e.g., 3 cameras, 1 doorbell, 2 speakers"/><Label>Description</Label><Textarea {...register("issue")} placeholder="What devices? Existing system? Goals?" rows={3}/></div>}
+            {svc==="it-support"&&<div className="space-y-3"><Label>Business Name</Label><Input {...register("businessName")} placeholder="Your business name"/><Label>Number of Employees/Devices</Label><Input {...register("employees")} placeholder="e.g., 10 employees, 15 devices"/><Label>Current Pain Points</Label><Textarea {...register("issue")} placeholder="Network issues, cybersecurity concerns, email problems..." rows={3}/></div>}
+            {svc==="website-social-media"&&<div className="space-y-3"><Label>Business Name</Label><Input {...register("businessName")} placeholder="Your business name"/><Label>Industry</Label><Input {...register("industry")} placeholder="Restaurant, retail, medical..."/><Label>What are your goals?</Label><Textarea {...register("goals")} placeholder="New website, redesign, SEO, social media management..." rows={3}/></div>}
+            <Label className="mt-3 block">Remote or On-Site?</Label><div className="flex gap-3 mt-1">{["remote","on-site"].map(o=>(<button key={o} type="button" onClick={()=>setValue("remoteOnsite",o)} className={`px-4 py-2 rounded-lg border-2 text-sm font-medium capitalize ${watch("remoteOnsite")===o?'border-indigo-500 bg-indigo-50 dark:bg-indigo-950 dark:border-cyan-500':'border-slate-200 dark:border-slate-700'}`}>{o}</button>))}</div>
+          </div>)}
+          {step===2&&(<div className="animate-fade-in"><h2 className="text-xl font-bold text-slate-900 dark:text-white mb-4">When works for you?</h2><div className="space-y-3"><Label>Preferred Date</Label><Input type="date" {...register("preferredDate")}/><Label>Preferred Time</Label><div className="grid grid-cols-5 gap-2">{timeSlots.map(t=>(<button key={t} type="button" onClick={()=>setValue("preferredTime",t)} className={`px-2 py-1.5 rounded-lg border-2 text-xs font-medium transition-all ${watch("preferredTime")===t?'border-indigo-500 bg-indigo-50 dark:bg-indigo-950 dark:border-cyan-500':'border-slate-200 dark:border-slate-700'}`}>{t}</button>))}</div></div></div>)}
+          {step===3&&(<div className="animate-fade-in"><h2 className="text-xl font-bold text-slate-900 dark:text-white mb-4">Your contact info</h2><div className="space-y-3"><div><Label>Address</Label><Input {...register("address")} placeholder="123 Main St"/><p className="text-red-400 text-xs mt-1">{errors.address?.message}</p></div><div className="grid sm:grid-cols-2 gap-3"><div><Label>Name</Label><Input {...register("name")}/><p className="text-red-400 text-xs mt-1">{errors.name?.message}</p></div><div><Label>Phone</Label><Input {...register("phone")}/><p className="text-red-400 text-xs mt-1">{errors.phone?.message}</p></div></div><div><Label>Email</Label><Input {...register("email")}/><p className="text-red-400 text-xs mt-1">{errors.email?.message}</p></div></div></div>)}
+          {step===4&&(<div className="animate-fade-in"><h2 className="text-xl font-bold text-slate-900 dark:text-white mb-4">Review your booking</h2><div className="space-y-2 text-sm"><div className="flex justify-between py-2 border-b dark:border-slate-700"><span className="text-slate-500 dark:text-slate-400">Service</span><span className="font-semibold dark:text-white">{sType?.label||svc}</span></div>{watch("deviceType")&&<div className="flex justify-between py-2 border-b dark:border-slate-700"><span className="text-slate-500 dark:text-slate-400">Device</span><span className="font-semibold dark:text-white">{watch("deviceType")}{watch("brand")?` — ${watch("brand")}`:''}</span></div>}<div className="flex justify-between py-2 border-b dark:border-slate-700"><span className="text-slate-500 dark:text-slate-400">When</span><span className="font-semibold dark:text-white capitalize">{watch("remoteOnsite")}{watch("preferredDate")?` · ${watch("preferredDate")}`:''}{watch("preferredTime")?` at ${watch("preferredTime")}`:''}</span></div><div className="flex justify-between py-2 border-b dark:border-slate-700"><span className="text-slate-500 dark:text-slate-400">Contact</span><span className="font-semibold dark:text-white">{watch("name")} · {watch("email")} · {watch("phone")}</span></div></div></div>)}
+          <div className="flex justify-between mt-8 pt-6 border-t dark:border-slate-700"><Button type="button" variant="outline" onClick={()=>setStep(s=>s-1)} disabled={step===0}><FontAwesomeIcon icon={faArrowLeft} className="mr-2 size-3"/>Back</Button>{step<4?<Button type="button" className="bg-indigo-700 hover:bg-indigo-800 dark:bg-indigo-600" onClick={()=>{if(step===0&&!svc)return;setStep(s=>s+1);}}>Next <FontAwesomeIcon icon={faArrowRight} className="ml-2 size-3"/></Button>:<Button type="submit" className="bg-lime-500 hover:bg-lime-600 text-slate-900 font-bold"><FontAwesomeIcon icon={faCalendarCheck} className="mr-2 size-4"/>Confirm Booking</Button>}</div>
+        </form>
+      </CardContent></Card>
+    </div></section></>);
+}
